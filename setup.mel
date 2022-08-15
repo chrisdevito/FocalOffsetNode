@@ -72,6 +72,10 @@ global proc setupFocalOffset()
 	loadModule -scan;
 	loadModule -allModules;
 	loadModule -load "FocalOffsetNode";
+
+	string $scriptsPath = "\"" + $maya_module_dir + "FocalOffsetNode/scripts\"";
+	python "import sys";
+	python ("if " + $scriptsPath + " not in sys.path:\n\tsys.path.insert(1, "+ $scriptsPath + ");");
 	python "import FocalOffset.shelf";
 
 	confirmDialog -t "Installed" -m "FocalOffsetNode has been installed!" -button "Okay";
