@@ -6,7 +6,7 @@ from collections import OrderedDict
 buttons = OrderedDict(
     {
         "FocalOffsetNode": {
-            "command": ("import FocalOffset\n", "FocalOffset.main()"),
+            "command": ("import FocalOffset\nFocalOffset.main()"),
             "sourceType": "python",
             "style": "iconOnly",
             "image": "maya_focaloffset_icon.png",

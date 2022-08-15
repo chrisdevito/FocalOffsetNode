@@ -1,3 +1,3 @@
 + FocalOffsetNode any ./FocalOffsetNode
-METHOD_MAYA_SHELF_BUTTON_PATH +:= ./FocalOffsetNode/shelves
+PYTHONPATH +:= ./FocalOffsetNode/scripts
 XBMLANGPATH +:= ./FocalOffsetNode/icons/%B

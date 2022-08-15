@@ -70,6 +70,7 @@ global proc setupFocalOffset()
 	python ("shutil.copyfile(\"" + $dirPath + "/FocalOffsetNode.mod\", \"" + $maya_module_dir + "FocalOffsetNode.mod\")");
 
 	loadModule -scan;
+	loadModule -allModules;
 	loadModule -load "FocalOffsetNode";
 	python "import FocalOffset.shelf";
 
