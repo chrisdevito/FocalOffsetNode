@@ -66,7 +66,6 @@ global proc setupFocalOffset()
 	python ("shutil.copytree(\"" + $dirPath + "/icons\", \"" + $maya_module_dir + "FocalOffsetNode/icons\")");
 	python ("shutil.copytree(\"" + $dirPath + "/plug-ins\", \"" + $maya_module_dir + "FocalOffsetNode/plug-ins\")");
 	python ("shutil.copytree(\"" + $dirPath + "/scripts\", \"" + $maya_module_dir + "FocalOffsetNode/scripts\")");
-	python ("shutil.copytree(\"" + $dirPath + "/shelves\", \"" + $maya_module_dir + "FocalOffsetNode/shelves\")");
 	python ("shutil.copytree(\"" + $dirPath + "/docs\", \"" + $maya_module_dir + "FocalOffsetNode/docs\")");
 	python ("shutil.copyfile(\"" + $dirPath + "/FocalOffsetNode.mod\", \"" + $maya_module_dir + "FocalOffsetNode.mod\")");
 
