@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+
+__author__ = "Christopher DeVito"
+__email__ = "chrisdevito@chribis.com"
+__version__ = "0.1.0"
+
 from maya import cmds
 
 
@@ -28,11 +34,11 @@ def main():
     nice_focal_name = focal_point.split(":")[-1]
 
     focal_node = cmds.createNode(
-        "FocalOffset", name="{0}_{1}_focaloffset".format(
-            nice_camera_name, nice_focal_name))
+        "FocalOffset",
+        name="{0}_{1}_focaloffset".format(nice_camera_name, nice_focal_name),
+    )
 
-    out_camera = cmds.duplicate(
-        camera, name="{0}_result".format(nice_camera_name))[0]
+    out_camera = cmds.duplicate(camera, name="{0}_result".format(nice_camera_name))[0]
 
     if cmds.listRelatives(out_camera, parent=True):
         cmds.parent(out_camera, world=True)
@@ -40,18 +46,15 @@ def main():
     out_camera_shape = cmds.listRelatives(out_camera, children=True)[0]
 
     # input
-    cmds.connectAttr(
-        camera + ".worldMatrix", focal_node + ".input_camera_matrix")
-    cmds.connectAttr(
-        camera_shape + ".focalLength", focal_node + ".input_focalLength")
-    cmds.connectAttr(
-        focal_point + ".worldMatrix", focal_node + ".input_object_matrix")
+    cmds.connectAttr(camera + ".worldMatrix", focal_node + ".input_camera_matrix")
+    cmds.connectAttr(camera_shape + ".focalLength", focal_node + ".input_focalLength")
+    cmds.connectAttr(focal_point + ".worldMatrix", focal_node + ".input_object_matrix")
 
     # output
+    cmds.connectAttr(focal_node + ".output_translate", out_camera + ".translate")
     cmds.connectAttr(
-        focal_node + ".output_translate", out_camera + ".translate")
-    cmds.connectAttr(
-        focal_node + ".output_focalLength", out_camera_shape + ".focalLength")
+        focal_node + ".output_focalLength", out_camera_shape + ".focalLength"
+    )
 
     cmds.orientConstraint(camera, out_camera)
 

@@ -30,7 +30,8 @@ global proc maya_focaloffset_button()
         -sourceType "python"
         -commandRepeatable 1
         -flat 1
-        -parent "mTRACK";
+        -parent "Custom";
 }
 
+print "fuck";
 evalDeferred maya_focaloffset_button;

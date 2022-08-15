@@ -1,0 +1,80 @@
+// Installs the OBB package to your open maya session.
+
+proc string getPathFromProc(string $procName)
+{
+	string $whatIs = `whatIs $procName`;
+	string $parts[] = `stringToStringArray $whatIs ":"`;
+	// in case something went wrong:
+	if (size($parts) == 1)
+		return $parts[0];
+
+	// else if there are 2 items the second is the path:
+	string $path = $parts[1];
+	// or more than 2 the ":" separated them: reattach
+	if (size($parts) > 2)
+		for ($i = 2; $i < size($parts); $i++)
+			$path += ":" + $parts[$i];
+
+	return strip($path);
+}
+
+global proc setupFocalOffset()
+{
+	string $path = `getPathFromProc "setupFocalOffset"`;
+	string $dirPath = dirname($path);
+
+	// get a module dir or use a default
+	string $user_app_dir = `internalVar -userAppDir`;
+	string $maya_module_dir = $user_app_dir + "modules";
+
+	// get module path
+	string $maya_module_paths_str = `getenv "MAYA_MODULE_PATH"`;
+	// break it up by ;
+	string $module_paths[];
+	$num_paths = `tokenize $maya_module_paths_str ";" $module_paths`;
+
+	// find first one that has user_app_dir otherwise we used default
+	for($index = 0; $index < $num_paths; $index++)
+	{
+	    if (`startsWith $module_paths[$index] $user_app_dir`)
+	    {
+	        $maya_module_dir = $module_paths[$index];
+	        break;
+	    }
+	}
+
+	$maya_module_dir += "/";
+
+	if (`file -q -ex ($maya_module_dir + "FocalOffsetNode.mod")`)
+	{
+		string $response = `confirmDialog -t "Reinstall?" -m "Would you like to reinstall the FocalOffsetNode?" -button "Yes" -button "No" -dismissString "No"`;
+		if ($response == "Yes")
+		{
+			python "import os";
+			python "import shutil";
+			python ("os.remove(\"" + $maya_module_dir + "FocalOffsetNode.mod\")");
+			python ("shutil.rmtree(\"" + $maya_module_dir + "FocalOffsetNode\")");
+		}
+		else
+		{
+			return;
+		}
+	}
+
+	// Copy the file path.
+	python "import shutil";
+	python ("shutil.copytree(\"" + $dirPath + "/icons\", \"" + $maya_module_dir + "FocalOffsetNode/icons\")");
+	python ("shutil.copytree(\"" + $dirPath + "/plug-ins\", \"" + $maya_module_dir + "FocalOffsetNode/plug-ins\")");
+	python ("shutil.copytree(\"" + $dirPath + "/scripts\", \"" + $maya_module_dir + "FocalOffsetNode/scripts\")");
+	python ("shutil.copytree(\"" + $dirPath + "/shelves\", \"" + $maya_module_dir + "FocalOffsetNode/shelves\")");
+	python ("shutil.copytree(\"" + $dirPath + "/docs\", \"" + $maya_module_dir + "FocalOffsetNode/docs\")");
+	python ("shutil.copyfile(\"" + $dirPath + "/FocalOffsetNode.mod\", \"" + $maya_module_dir + "FocalOffsetNode.mod\")");
+
+	loadModule -scan;
+	loadModule -load "FocalOffsetNode";
+	python "import FocalOffset.shelf";
+
+	confirmDialog -t "Installed" -m "FocalOffsetNode has been installed!" -button "Okay";
+}
+
+setupFocalOffset();
